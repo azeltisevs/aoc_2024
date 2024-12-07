@@ -85,7 +85,7 @@ func main() {
 			field[obstacleY][obstacleX] = Crate
 
 			// try escaping
-			escaped := tryEscaping(initialGuardY, initialGuardX, field, path, 10)
+			escaped := tryEscaping(initialGuardY, initialGuardX, field, path, 5)
 			if !escaped {
 				timesStuck++
 			}
@@ -99,7 +99,7 @@ func main() {
 		}
 	}
 
-	fmt.Println("times stuck", timesStuck)
+	fmt.Println("times stuck", timesStuck) // 1309
 
 	//fmt.Println("field", "\n"+drawField(field))
 	//fmt.Println("final path", "\n"+drawField(path))
