@@ -13,7 +13,6 @@ func main() {
 	helpers.PrintField(antennas, n, m)
 
 	antinodes := make(map[helpers.Point]int)
-	var sum int
 	for antenna, points := range antennas {
 		fmt.Println("antenna", antenna)
 		for i := range points {
@@ -30,11 +29,6 @@ func main() {
 						antinode1.Y, antinode1.X,
 					}
 					antinodes[point]++
-
-					//if _, ok := antinodes[point]; !ok {
-					//	antinodes[point] = 1
-					//} else {
-					//}
 				}
 				antinode2 := helpers.Point{points[j].Y + dy2, points[j].X + dx2}
 				if checkAntinode(antinode2, m, n) {
@@ -47,13 +41,6 @@ func main() {
 			}
 		}
 	}
-
-	//for point := range antinodes {
-	//	antennas['#'] = append(antennas['#'], point.Point)
-	//}
-	//helpers.PrintField(antennas, n, m)
-
-	fmt.Println("sum", sum)
 	fmt.Println(len(antinodes))
 }
 
