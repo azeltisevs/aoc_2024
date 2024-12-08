@@ -87,9 +87,9 @@ func inverseField(field map[rune][]Point) map[Point]rune {
 	result := make(map[Point]rune)
 	for k, v := range field {
 		for _, point := range v {
-			if value, ok := result[point]; ok {
-				panic(fmt.Sprintf("conflict. key %v, existing value: %c, new value: %c", point, value, k))
-			}
+			//if value, ok := result[point]; ok {
+			//	panic(fmt.Sprintf("conflict. key %v, existing value: %c, new value: %c", point, value, k))
+			//}
 			result[point] = k
 		}
 	}
