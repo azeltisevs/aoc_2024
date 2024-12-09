@@ -43,8 +43,16 @@ func FindAllAlphanumeric(lines []string) map[rune][]Point {
 	return result
 }
 
+func ExtractDigits(s string) []int {
+	return extractNumbersRegex(s, "(\\d)")
+}
+
 func ExtractNumbers(s string) []int {
-	regex, err := regexp.Compile("(\\d+)")
+	return extractNumbersRegex(s, "(\\d+)")
+}
+
+func extractNumbersRegex(s string, expr string) []int {
+	regex, err := regexp.Compile(expr)
 	if err != nil {
 		panic(err)
 	}
