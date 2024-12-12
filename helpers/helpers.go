@@ -18,6 +18,14 @@ func ReadAllLinesFromFile(filename string) []string {
 	return strings.Split(string(input), "\n")
 }
 
+func ExtractAllDigits(lines []string) [][]int {
+	var result [][]int
+	for _, line := range lines {
+		result = append(result, ExtractDigits(line))
+	}
+	return result
+}
+
 func ExtractAllNumbers(lines []string) [][]int {
 	var result [][]int
 	for _, line := range lines {
@@ -44,15 +52,15 @@ func FindAllAlphanumeric(lines []string) map[rune][]Point {
 }
 
 func ExtractDigits(s string) []int {
-	return extractNumbersRegex(s, "(\\d)")
+	return extractNumRegex(s, "(\\d)")
 }
 
 func ExtractNumbers(s string) []int {
-	return extractNumbersRegex(s, "(\\d+)")
+	return extractNumRegex(s, "(\\d+)")
 }
 
-func extractNumbersRegex(s string, expr string) []int {
-	regex, err := regexp.Compile(expr)
+func extractNumRegex(s string, pattern string) []int {
+	regex, err := regexp.Compile(pattern)
 	if err != nil {
 		panic(err)
 	}
