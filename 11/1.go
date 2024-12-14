@@ -10,22 +10,14 @@ type Node struct {
 	next  *Node
 }
 
-// blink calculates how many stones are created for times blinked
-func blink(stone int, times int) int {
-	if times == 0 {
-		return 0
-	}
-	s1, s2 := transformStone(stone)
-	if s2 != -1 {
-		return 1 +
-			blink(s2, times-1) +
-			blink(s1, times-1)
-	} else {
-		return blink(s1, times-1)
-	}
+const times = 75
+
+type Key struct {
+	stone int
+	depth int
 }
 
-const times = 25
+var cache = make(map[Key]int)
 
 func main() {
 	lines := helpers.ReadAllLinesFromFile("./11/input.txt")
@@ -38,6 +30,44 @@ func main() {
 	}
 	fmt.Println(sum)
 }
+
+// blink calculates how many stones are created for times blinked
+func blink(stone int, times int) int {
+	if times == 0 {
+		return 0
+	}
+
+	//result, ok := checkCache(stone, times)
+	if result, ok := cache[Key{stone, times}]; ok {
+		return result
+	}
+
+	s1, s2 := transformStone(stone)
+	var stonesProduced int
+	if s2 != -1 {
+		stonesProduced = 1 +
+			blink(s2, times-1) +
+			blink(s1, times-1)
+	} else {
+		stonesProduced = blink(s1, times-1)
+	}
+
+	cache[Key{stone, times}] = stonesProduced
+
+	return stonesProduced
+}
+
+//func checkCache(stone int, t int) (int, bool) {
+//	if stonesByTimes, ok := cache[stone]; ok {
+//		if len(stonesByTimes) >= t {
+//			return stonesByTimes[t], true
+//		} else {
+//			return -1, false
+//		}
+//	} else {
+//		return -1, false
+//	}
+//}
 
 func transformStone(stone int) (int, int) {
 	if stone == 0 {
