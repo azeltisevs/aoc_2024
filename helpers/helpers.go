@@ -80,6 +80,7 @@ func extractNumRegex(s string, pattern string) []int {
 
 func PrintField(field map[rune][]Point, n int, m int) {
 	inversedField := inverseField(field)
+	fmt.Println("inversed field", inversedField)
 	fmt.Println()
 	fmt.Printf("%3c", ' ')
 	for x := 0; x < n; x++ {
