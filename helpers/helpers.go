@@ -39,7 +39,18 @@ type Point struct {
 	X int
 }
 
-func FindAllAlphanumeric(lines []string) map[rune][]Point {
+func ReadAllRunes(lines []string) [][]rune {
+	result := make([][]rune, len(lines))
+	for y, line := range lines {
+		result[y] = make([]rune, len(lines[y]))
+		for x, r := range line {
+			result[y][x] = r
+		}
+	}
+	return result
+}
+
+func FindAllAlphanumericGroupByRunes(lines []string) map[rune][]Point {
 	result := make(map[rune][]Point)
 	for y, line := range lines {
 		for x, r := range line {
@@ -78,7 +89,23 @@ func extractNumRegex(s string, pattern string) []int {
 	return result
 }
 
-func PrintField(field map[rune][]Point, n int, m int) {
+func PrintField(field [][]rune) {
+	fmt.Println()
+	fmt.Printf("%3c", ' ')
+	for x := 0; x < len(field[0]); x++ {
+		fmt.Printf("%3d", x)
+	}
+	fmt.Println()
+	for y := 0; y < len(field); y++ {
+		fmt.Printf("%3d", y)
+		for x := 0; x < len(field[0]); x++ {
+			fmt.Printf("%3c", field[y][x])
+		}
+		fmt.Println()
+	}
+}
+
+func PrintFieldMap(field map[rune][]Point, n int, m int) {
 	inversedField := inverseField(field)
 	fmt.Println("inversed field", inversedField)
 	fmt.Println()

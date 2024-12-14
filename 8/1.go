@@ -8,9 +8,9 @@ import (
 func main() {
 	lines := helpers.ReadAllLinesFromFile("./8/input.txt")
 	n, m := len(lines), len(lines[0])
-	antennas := helpers.FindAllAlphanumeric(lines)
+	antennas := helpers.FindAllAlphanumericGroupByRunes(lines)
 
-	helpers.PrintField(antennas, n, m)
+	helpers.PrintFieldMap(antennas, n, m)
 
 	antinodes := make(map[helpers.Point]int)
 	for antenna, points := range antennas {
