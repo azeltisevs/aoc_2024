@@ -10,88 +10,42 @@ type Node struct {
 	next  *Node
 }
 
+// blink calculates how many stones are created for times blinked
+func blink(stone int, times int) int {
+	if times == 0 {
+		return 0
+	}
+	s1, s2 := transformStone(stone)
+	if s2 != -1 {
+		return 1 +
+			blink(s2, times-1) +
+			blink(s1, times-1)
+	} else {
+		return blink(s1, times-1)
+	}
+}
+
+const times = 25
+
 func main() {
 	lines := helpers.ReadAllLinesFromFile("./11/input.txt")
 	stones := helpers.ExtractNumbers(lines[0])
 	fmt.Println("stones", stones)
 
-	cache := make(map[int][]int)
-	cache[0] = []int{1}
-
-	head := Node{
-		stones[0],
-		nil,
-	}
-	currentNode := &head
-	for i := 1; i < len(stones); i++ {
-		newNode := &Node{
-			stones[i],
-			nil,
-		}
-		currentNode.next = newNode
-		currentNode = newNode
-	}
-	printList(&head)
-
-	for i := 0; i < 75; i++ {
-		blink(&head, cache)
-		fmt.Println(i + 1)
-		//printList(&head)
-	}
-
-	sum := 0
-	currentNode = &head
-	for currentNode != nil {
-		currentNode = currentNode.next
-		sum++
+	sum := len(stones)
+	for _, stone := range stones {
+		sum += blink(stone, times)
 	}
 	fmt.Println(sum)
 }
 
-func printList(head *Node) {
-	currentNode := head
-	fmt.Print("[ ")
-	for currentNode != nil {
-		fmt.Print(currentNode.stone, " ")
-		currentNode = currentNode.next
-	}
-	fmt.Println("]")
-}
-
-func blink(head *Node, cache map[int][]int) {
-	currentNode := head
-	for currentNode != nil {
-		if newStones, ok := cache[currentNode.stone]; ok {
-			if len(newStones) > 1 {
-				currentNode.stone = newStones[0]
-				newNode := &Node{
-					stone: newStones[1],
-					next:  currentNode.next,
-				}
-				currentNode.next = newNode
-				currentNode = newNode
-			} else {
-				currentNode.stone = newStones[0]
-			}
-		} else {
-			if digits := numberOfDigits(currentNode.stone); digits%2 == 0 {
-				firstPart, secondPart := splitNumber(currentNode.stone, digits)
-				cache[currentNode.stone] = []int{firstPart, secondPart}
-
-				currentNode.stone = firstPart
-				newNode := &Node{
-					stone: secondPart,
-					next:  currentNode.next,
-				}
-				currentNode.next = newNode
-				currentNode = newNode
-
-			} else {
-				cache[currentNode.stone] = []int{currentNode.stone * 2024}
-				currentNode.stone = cache[currentNode.stone][0]
-			}
-		}
-		currentNode = currentNode.next
+func transformStone(stone int) (int, int) {
+	if stone == 0 {
+		return 1, -1
+	} else if digits := numberOfDigits(stone); digits%2 == 0 {
+		return splitNumber(stone, digits)
+	} else {
+		return stone * 2024, -1
 	}
 }
 
