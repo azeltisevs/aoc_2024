@@ -5,11 +5,6 @@ import (
 	"fmt"
 )
 
-type Node struct {
-	stone int
-	next  *Node
-}
-
 const times = 75
 
 type Key struct {
@@ -37,7 +32,6 @@ func blink(stone int, times int) int {
 		return 0
 	}
 
-	//result, ok := checkCache(stone, times)
 	if result, ok := cache[Key{stone, times}]; ok {
 		return result
 	}
@@ -56,18 +50,6 @@ func blink(stone int, times int) int {
 
 	return stonesProduced
 }
-
-//func checkCache(stone int, t int) (int, bool) {
-//	if stonesByTimes, ok := cache[stone]; ok {
-//		if len(stonesByTimes) >= t {
-//			return stonesByTimes[t], true
-//		} else {
-//			return -1, false
-//		}
-//	} else {
-//		return -1, false
-//	}
-//}
 
 func transformStone(stone int) (int, int) {
 	if stone == 0 {
