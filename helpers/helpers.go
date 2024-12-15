@@ -139,3 +139,33 @@ func inverseField(field map[rune][]Point) map[Point]rune {
 	}
 	return result
 }
+
+type Int interface {
+	int | uint | int8 | uint8 | int16 | uint16 | int32 | uint32 | int64 | uint64
+}
+
+func Min[K Int](x K, y K) K {
+	if x < y {
+		return x
+	} else {
+		return y
+	}
+}
+
+func LCM(a, b int) int {
+	return a * b / GCD(a, b)
+}
+
+func GCD(a, b int) int {
+	if a == 0 {
+		return b
+	}
+	if b == 0 {
+		return a
+	}
+	if a > b {
+		return GCD(a%b, b)
+	} else {
+		return GCD(a, b%a)
+	}
+}
