@@ -39,8 +39,28 @@ func main() {
 		a := Point{buttonAX, buttonAY}
 		b := Point{buttonBX, buttonBY}
 		prize := Point{prizeX, prizeY}
-		aMul, bMul := findMultipliers(a, b, prize)
-		sum += findCheapestWay(a, aMul, b, bMul)
+		aXMul, bXMul := findMultipliers(a.x, b.x, prize.x)
+		if aXMul == -1 && bXMul == -1 {
+			continue
+		}
+		xWays := findAllWays(a.x, aXMul, b.x, bXMul)
+
+		aYMul, bYMul := findMultipliers(a.y, b.y, prize.y)
+		if aYMul == -1 && bYMul == -1 {
+			continue
+		}
+		yWays := findAllWays(a.y, aYMul, b.y, bYMul)
+
+		intersection := intersect(xWays, yWays)
+		if len(intersection) != 0 {
+			cheapest := 99999999999999
+			for _, v := range intersection {
+				if cheapest > v {
+					cheapest = v
+				}
+			}
+			sum += cheapest
+		}
 
 		//playSum, ok := play(Point{}, Point{buttonAX, buttonAY}, Point{buttonBX, buttonBY}, Point{prizeX, prizeY}, 0)
 		//if ok {
@@ -51,38 +71,51 @@ func main() {
 	fmt.Println(sum)
 }
 
-func findCheapestWay(a Point, aMul int, b Point, bMul int) int {
-	cheapestCost := aMul*aCost + bMul*bCost
-	lcm := helpers.LCM(a.x, b.x)
-	timesA := lcm / a.x
-	timesB := lcm / b.x
-
-	for aMul > 0 {
-		newCost := aMul*aCost + bMul*bCost
-		fmt.Printf("Variant: %d*%d + %d*%d = %d (cost: %d)\n", a.x, aMul, b.x, bMul, a.x*aMul+b.x*bMul, newCost)
-		if newCost < cheapestCost {
-			cheapestCost = newCost
+func intersect(s1 map[Mul]int, s2 map[Mul]int) map[Mul]int {
+	result := make(map[Mul]int)
+	for k, v := range s1 {
+		if _, ok := s2[k]; ok {
+			result[k] = v
 		}
+	}
+	return result
+}
+
+type Mul struct {
+	a int
+	b int
+}
+
+func findAllWays(a int, aMul int, b int, bMul int) map[Mul]int {
+	lcm := helpers.LCM(a, b)
+	timesA := lcm / a
+	timesB := lcm / b
+
+	result := make(map[Mul]int)
+	for aMul > 0 {
+		if aMul <= 100 && bMul <= 100 {
+			result[Mul{aMul, bMul}] = aMul*aCost + bMul*bCost
+		}
+		//fmt.Printf("Variant: %d*%d + %d*%d = %d (cost: %d)\n", a.x, aMul, b.x, bMul, a.x*aMul+b.x*bMul, newCost)
 		aMul -= timesA
 		bMul += timesB
 	}
-	return cheapestCost
+	return result
 }
 
-func findMultipliers(a Point, b Point, prize Point) (int, int) {
-	aMultiplier := prize.x / a.x
+func findMultipliers(a int, b int, prize int) (int, int) {
+	aMultiplier := prize / a
 
-	for (prize.x-a.x*aMultiplier)%b.x != 0 && aMultiplier > 0 {
+	for (prize-a*aMultiplier)%b != 0 && aMultiplier > 0 {
 		aMultiplier--
 	}
 	if aMultiplier == 0 {
-		panic("handle me later")
+		return -1, -1
+		//panic("handle me later")
 	}
 
-	return aMultiplier, (prize.x - aMultiplier*a.x) / b.x
+	return aMultiplier, (prize - aMultiplier*a) / b
 }
-
-// todo don't forget about 100 limit
 
 const aCost = 3
 const bCost = 1
