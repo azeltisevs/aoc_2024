@@ -67,7 +67,7 @@ func ExtractDigits(s string) []int {
 }
 
 func ExtractNumbers(s string) []int {
-	return extractNumRegex(s, "(\\d+)")
+	return extractNumRegex(s, "(\\-?\\d+)")
 }
 
 func extractNumRegex(s string, pattern string) []int {
